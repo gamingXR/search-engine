@@ -15,36 +15,36 @@
   <div id="results"></div>
 
   <script>
-    // Define a list of documents to search through
-    const documents = [
-      "The sun is shining in the sky",
-      "The weather is sweet and mild",
-      "The sun is shining and the weather is nice",
-      "Today is a beautiful day",
-      "The sky is clear and the sun is bright"
-    ];
-
-    // Get the search button and results container elements
     const searchButton = document.getElementById("search-button");
     const resultsContainer = document.getElementById("results");
 
-    // Define a function to search the documents
-    function search() {
+    async function search() {
       const query = document.getElementById("query").value;
-
-      // Clear previous results
       resultsContainer.innerHTML = "";
 
-      // Loop through the documents and add the ones that match the query
-      for (const document of documents) {
-        if (document.includes(query)) {
-          const result = document.replace(query, `<b>${query}</b>`);
-          resultsContainer.innerHTML += `<p>${result}</p>`;
-        }
+      const apiKey = "your_api_key_here";
+      const response = await fetch(`https://api.openai.com/v1/engines/gpt-3/jobs`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          prompt: `search for ${query}`,
+          max_tokens: 100
+        })
+      });
+
+      if (!response.ok) {
+        resultsContainer.innerHTML = "An error occurred while calling the API.";
+        return;
       }
+
+      const json = await response.json();
+      const result = json.choices[0].text;
+      resultsContainer.innerHTML = `<p>${result}</p>`;
     }
 
-    // Add an event listener to the search button to call the search function when clicked
     searchButton.addEventListener("click", search);
   </script>
 
