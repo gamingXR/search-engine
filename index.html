@@ -2,6 +2,62 @@
 <html>
 <head>
   <title>Search Engine</title>
+  <!-- Load Algolia's client library -->
+  <script src="https://cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch.min.js"></script>
+</head>
+<body>
+
+  <h1>Search Engine</h1>
+
+  <input type="text" id="query">
+  <button id="search-button">Search</button>
+
+  <br><br>
+
+  <div id="results"></div>
+
+  <script>
+    // Create an Algolia client instance
+    const client = algoliasearch("APP_ID", "API_KEY");
+    // Replace APP_ID and API_KEY with your Algolia credentials
+
+    // Get the search button and results container elements
+    const searchButton = document.getElementById("search-button");
+    const resultsContainer = document.getElementById("results");
+
+    // Define a function to search Algolia index
+    function search() {
+      const query = document.getElementById("query").value;
+
+      // Clear previous results
+      resultsContainer.innerHTML = "";
+
+      // Search Algolia index
+      client.search({
+        indexName: "INDEX_NAME", // Replace INDEX_NAME with the name of your Algolia index
+        query: query
+      })
+        .then(({ hits }) => {
+          // Loop through the search results and add the ones that match the query
+          for (const result of hits) {
+            resultsContainer.innerHTML += `<p><a href="${result.url}">${result.title}</a></p>`;
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+
+    // Add an event listener to the search button to call the search function when clicked
+    searchButton.addEventListener("click", search);
+  </script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Search Engine</title>
 </head>
 <body>
 
@@ -46,4 +102,3 @@
 
 </body>
 </html>
-
