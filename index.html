@@ -22,18 +22,7 @@
       const query = document.getElementById("query").value;
       resultsContainer.innerHTML = "";
 
-      const apiKey = "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";
-      const response = await fetch(`https://api.openai.com/v1/engines/gpt-3/jobs`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          prompt: `search for ${query}`,
-          max_tokens: 100
-        })
-      });
+      const response = await fetch(`https://api.duckduckgo.com/?q=${query}&format=json`);
 
       if (!response.ok) {
         resultsContainer.innerHTML = "An error occurred while calling the API.";
@@ -41,8 +30,14 @@
       }
 
       const json = await response.json();
-      const result = json.choices[0].text;
-      resultsContainer.innerHTML = `<p>${result}</p>`;
+      if (json.Results.length === 0) {
+        resultsContainer.innerHTML = "No results found.";
+        return;
+      }
+
+      for (const result of json.Results) {
+        resultsContainer.innerHTML += `<p><a href="${result.FirstURL}">${result.Text}</a></p>`;
+      }
     }
 
     searchButton.addEventListener("click", search);
