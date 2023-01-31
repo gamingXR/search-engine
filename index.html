@@ -30,9 +30,13 @@
       }
 
       const json = await response.json();
-      if (json.Results.length === 0) {
+      if (json.Results.length === 0 && json.AbstractText === '') {
         resultsContainer.innerHTML = "No results found.";
         return;
+      }
+
+      if (json.AbstractText !== '') {
+        resultsContainer.innerHTML += `<p><a href="${json.AbstractURL}">${json.AbstractText}</a></p>`;
       }
 
       for (const result of json.Results) {
