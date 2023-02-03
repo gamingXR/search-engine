@@ -1,14 +1,66 @@
 <!DOCTYPE html>
 <html>
+    <style>
+        body {
+          background-color: #191919;
+          color: #f0f0f0;
+          font-family: monospace;
+        }
+      
+        h1 {
+          text-align: center;
+          color: #f0f0f0;
+          margin: 30px 0;
+        }
+      
+        form {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin: 50px 0;
+        }
+      
+        input[type="text"] {
+          padding: 10px 20px;
+          font-size: 18px;
+          background-color: #262626;
+          color: #f0f0f0;
+          border: none;
+          border-radius: 5px 0 0 5px;
+          flex-grow: 1;
+        }
+      
+        input[type="submit"] {
+          padding: 10px 20px;
+          font-size: 18px;
+          background-color: #f0f0f0;
+          color: #191919;
+          border: none;
+          border-radius: 0 5px 5px 0;
+          cursor: pointer;
+        }
+      
+        pre {
+          background-color: #262626;
+          color: #f0f0f0;
+          padding: 20px;
+          border-radius: 5px;
+          white-space: pre-wrap;
+          overflow-x: auto;
+        }
+      </style>
+      
   <head>
-    <title>School-Friendly Search Engine</title>
+    <title>Search Engine</title>
   </head>
   <body>
-    <h1>School-Friendly Search Engine</h1>
+    <h1>Search Engine</h1>
     <form>
       <input type="text" name="query">
       <input type="submit" value="Search">
     </form>
+
+    <pre id="console"></pre>
     <script>
       // Get the search query from the form
       const query = new URLSearchParams(window.location.search).get('query');
@@ -18,17 +70,16 @@
         fetch(`https://api.duckduckgo.com/?q=${query}&format=json`)
           .then(response => response.json())
           .then(data => {
+            console.log(data);
+            document.getElementById('console').innerText = JSON.stringify(data, null, 2);
+
             // Get the results
             const results = data.Results;
 
-            // Display the results
-            let html = '';
-            for (const result of results) {
-              html += `<h2><a href="${result.FirstURL}">${result.Text}</a></h2>`;
-            }
-            document.body.innerHTML += html;
+            console.log(results);
           });
       }
     </script>
   </body>
 </html>
+
